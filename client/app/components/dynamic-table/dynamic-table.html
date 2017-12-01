@@ -14,6 +14,13 @@
       </td>
     </tr>
     </tbody>
+    <tfoot>
+      <tr>
+        <td ng-repeat="column in $ctrl.columns">
+          {{column.footer}}
+        </td>
+      </tr>
+    </tfoot>
   </table>
 </div>
 <div class="text-center" ng-if="$ctrl.rowsCount > $ctrl.itemsPerPage">
