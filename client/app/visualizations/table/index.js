@@ -59,12 +59,29 @@ function GridRenderer(clientConfig) {
           $scope.gridColumns = [];
           $scope.filters = [];
         } else {
-          $scope.filters = $scope.queryResult.getFilters();
+          /* BUILDING TOTALS */
+          const totals = [];
+          $scope.queryResult.getData().forEach((row) => {
+            Object.keys(row).forEach((index) => {
+              if (row[index]) {
+                const value = row[index].replace(',', '');
+                if (!isNaN(value)) {
+                  if (!totals[index]) {
+                    totals[index] = Number(value);
+                  } else {
+                    totals[index] += Number(value);
+                  }
+                }
+              }
+            });
+          });
 
+          $scope.filters = $scope.queryResult.getFilters();
           const columns = $scope.queryResult.getColumns();
           columns.forEach((col) => {
             col.title = getColumnCleanName(col.name);
             col.formatFunction = partial(formatValue, $filter, clientConfig, _, col.type);
+            col.footer = totals[col.name] ? totals[col.name] : '';
           });
 
           $scope.gridRows = $scope.queryResult.getData();
