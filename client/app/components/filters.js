@@ -11,13 +11,13 @@ const FiltersComponent = {
 
     this.filterChangeListener = (filter, modal) => {
       this.onChange({ filter, $modal: modal });
+      window.localStorage.setItem(filter.column.title, JSON.stringify(filter.current));
     };
 
     this.itemGroup = (item) => {
       if (item === '*' || item === '-') {
         return '';
       }
-
       return 'Values';
     };
   },
