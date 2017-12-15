@@ -91,7 +91,6 @@ export function remove(items, item) {
       filtered.push(items[i]);
     }
   }
-
   return filtered;
 }
 

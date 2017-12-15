@@ -1,5 +1,6 @@
 import moment from 'moment';
 import { _, partial, isString } from 'underscore';
+import { replaceAll, numberFormat } from 'underscore.string';
 import { getColumnCleanName } from '@/services/query-result';
 import template from './table.html';
 
@@ -64,24 +65,39 @@ function GridRenderer(clientConfig) {
           $scope.queryResult.getData().forEach((row) => {
             Object.keys(row).forEach((index) => {
               if (row[index]) {
-                const value = row[index].replace(',', '');
+                const value = replaceAll(row[index], ',', '');
                 if (!isNaN(value)) {
                   if (!totals[index]) {
-                    totals[index] = Number(value);
+                    totals[index] = numberFormat(Number(value), 2);
                   } else {
-                    totals[index] += Number(value);
+                    totals[index] += numberFormat(Number(value), 2);
                   }
                 }
               }
             });
           });
 
+
+
           $scope.filters = $scope.queryResult.getFilters();
           const columns = $scope.queryResult.getColumns();
+
           columns.forEach((col) => {
             col.title = getColumnCleanName(col.name);
             col.formatFunction = partial(formatValue, $filter, clientConfig, _, col.type);
-            col.footer = totals[col.name] ? totals[col.name] : '';
+            switch (col.name) {
+              case 'SAC (€/Sub)': col.footer = parseFloat(totals[col.name]) / parseFloat(totals['Total Subscriptions']);
+                break;
+              case 'CTR( %)': col.footer = parseFloat(totals['Total Clicks']) / parseFloat(totals['Total Impressions']);
+                break;
+              case 'CVR(%)': col.footer = parseFloat(totals['Total Subscriptions']) / parseFloat(totals['Total Clicks']);
+                break;
+              case 'CPC(€)': col.footer = parseFloat(totals['Total Spend (€)']) / parseFloat(totals['Total Clicks']);
+                break;
+              case 'CPM (€)': col.footer = parseFloat(totals['Total Spend (€)']) / parseFloat((totals['Total Impressions'])) / 1000;
+                break
+              default: col.footer = totals[col.name] ? totals[col.name] : '';
+            }
           });
 
           $scope.gridRows = $scope.queryResult.getData();
