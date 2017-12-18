@@ -68,9 +68,9 @@ function GridRenderer(clientConfig) {
                 const value = replaceAll(row[index], ',', '');
                 if (!isNaN(value)) {
                   if (!totals[index]) {
-                    totals[index] = numberFormat(Number(value), 2);
+                    totals[index] = Number(value);
                   } else {
-                    totals[index] += numberFormat(Number(value), 2);
+                    totals[index] += Number(value);
                   }
                 }
               }
@@ -82,11 +82,13 @@ function GridRenderer(clientConfig) {
           $scope.filters = $scope.queryResult.getFilters();
           const columns = $scope.queryResult.getColumns();
 
+          console.log(totals);
+
           columns.forEach((col) => {
             col.title = getColumnCleanName(col.name);
             col.formatFunction = partial(formatValue, $filter, clientConfig, _, col.type);
             switch (col.name) {
-              case 'SAC (€/Sub)': col.footer = parseFloat(totals[col.name]) / parseFloat(totals['Total Subscriptions']);
+              case 'SAC (€/Sub)': col.footer = (totals['Total Spend (€)']) / (parseFloat(totals['Total Subscriptions']));
                 break;
               case 'CTR( %)': col.footer = parseFloat(totals['Total Clicks']) / parseFloat(totals['Total Impressions']);
                 break;
