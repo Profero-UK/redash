@@ -1,6 +1,8 @@
+/*eslint-disable */
+
 import moment from 'moment';
 import { _, partial, isString } from 'underscore';
-import { replaceAll, numberFormat } from 'underscore.string';
+import { replaceAll } from 'underscore.string';
 import { getColumnCleanName } from '@/services/query-result';
 import template from './table.html';
 
@@ -78,29 +80,13 @@ function GridRenderer(clientConfig) {
           });
 
 
-
           $scope.filters = $scope.queryResult.getFilters();
           const columns = $scope.queryResult.getColumns();
 
           console.log(totals);
+          console.log(columns);
 
-          columns.forEach((col) => {
-            col.title = getColumnCleanName(col.name);
-            col.formatFunction = partial(formatValue, $filter, clientConfig, _, col.type);
-            switch (col.name) {
-              case 'SAC (€/Sub)': col.footer = (totals['Total Spend (€)']) / (parseFloat(totals['Total Subscriptions']));
-                break;
-              case 'CTR( %)': col.footer = parseFloat(totals['Total Clicks']) / parseFloat(totals['Total Impressions']);
-                break;
-              case 'CVR(%)': col.footer = parseFloat(totals['Total Subscriptions']) / parseFloat(totals['Total Clicks']);
-                break;
-              case 'CPC(€)': col.footer = parseFloat(totals['Total Spend (€)']) / parseFloat(totals['Total Clicks']);
-                break;
-              case 'CPM (€)': col.footer = parseFloat(totals['Total Spend (€)']) / parseFloat((totals['Total Impressions'])) / 1000;
-                break
-              default: col.footer = totals[col.name] ? totals[col.name] : '';
-            }
-          });
+          columns.forEach(col => formatExtraCols(col, $filter, clientConfig, totals));
 
           $scope.gridRows = $scope.queryResult.getData();
           $scope.gridColumns = columns;
@@ -108,6 +94,27 @@ function GridRenderer(clientConfig) {
       });
     },
   };
+}
+
+function formatExtraCols(col, $filter, clientConfig, totals) {  
+  col.title = getColumnCleanName(col.name);
+  col.formatFunction = partial(formatValue, $filter, clientConfig, _, col.type);
+
+  const formulas = {
+    'SAC (€/Sub)': (totals['Total Spend (€)']) / (parseFloat(totals['Total Subscriptions'])),
+    'CTR( %)': parseFloat(totals['Total Clicks']) / parseFloat(totals['Total Impressions']),
+    'CVR(%)': parseFloat(totals['Total Subscriptions']) / parseFloat(totals['Total Clicks']),
+    'CPC(€)': parseFloat(totals['Total Spend (€)']) / parseFloat(totals['Total Clicks']),
+    'CPM (€)': parseFloat(totals['Total Spend (€)']) / parseFloat((totals['Total Impressions'])) / 1000
+  };
+
+  if (!formulas[col.name]) {
+    col.footer = totals[col.name] ? totals[col.name] : '';
+    return;
+  }
+
+  col.footer = formulas[col.name];
+
 }
 
 export default function init(ngModule) {
