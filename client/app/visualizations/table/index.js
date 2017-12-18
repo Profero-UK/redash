@@ -92,7 +92,7 @@ function GridRenderer(clientConfig) {
   };
 }
 
-function formatExtraCols(col, $filter, clientConfig, totals) {  
+function formatExtraCols(col, $filter, clientConfig, totals) {
   col.title = getColumnCleanName(col.name);
   col.formatFunction = partial(formatValue, $filter, clientConfig, _, col.type);
 
@@ -101,11 +101,11 @@ function formatExtraCols(col, $filter, clientConfig, totals) {
     'Total Subscriptions': totals['Total Subscriptions'],
     'Total Impressions': numberFormat(totals['Total Impressions']),
     'Total Clicks': numberFormat(totals['Total Clicks']),
-    'SAC (€/Sub)': numberFormat(totals['Total Spend (€)'] / totals['Total Subscriptions'], 2),
-    'CTR( %)': numberFormat(totals['Total Clicks'] / totals['Total Impressions'], 5),
-    'CVR(%)': numberFormat(totals['Total Subscriptions'] / totals['Total Clicks'], 5),
-    'CPC(€)': numberFormat(totals['Total Spend (€)'] / totals['Total Clicks'], 5),
-    'CPM (€)': numberFormat(totals['Total Spend (€)'] / (totals['Total Impressions']) / 1000, 5)
+    'SAC (€/Sub)': (numberFormat(totals['Total Spend (€)'])) && (totals['Total Subscriptions']) ? numberFormat(totals['Total Spend (€)'] / totals['Total Subscriptions'], 2) : numberFormat(totals['SAC (€/Sub)']),
+    'CTR( %)': totals['Total Clicks'] && totals['Total Impressions'] ? numberFormat(totals['Total Clicks'] / totals['Total Impressions'], 5) : numberFormat(totals['CTR( %)']),
+    'CVR(%)': totals['Total Subscriptions'] && totals['Total Clicks'] ? numberFormat(totals['Total Subscriptions'] / totals['Total Clicks'], 5) : numberFormat(totals['CVR%']),
+    'CPC(€)': totals['Total Spend (€)'] && totals['Total Clicks'] ? numberFormat(totals['Total Spend (€)'] / totals['Total Clicks'], 5) : totals['CPC(€)'],
+    'CPM (€)': totals['Total Spend (€)'] && totals['Total Impressions'] ? numberFormat((totals['Total Spend (€)']) / (totals['Total Impressions']) / 1000, 5) : numberFormat(totals['CPM (€)'])
   };
 
   col.footer = formulas[col.name];
