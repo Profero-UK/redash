@@ -106,11 +106,11 @@ function formatExtraCols(col, $filter, clientConfig, totals) {
     'Total Subscriptions': totals['Total Subscriptions'],
     'Total Impressions': numberFormat(totals['Total Impressions']),
     'Total Clicks': numberFormat(totals['Total Clicks']),
-    'SAC (€/Sub)': (totals['Total Spend (€)']) / (parseFloat(totals['Total Subscriptions'])),
-    'CTR( %)': parseFloat(totals['Total Clicks']) / parseFloat(totals['Total Impressions']),
-    'CVR(%)': parseFloat(totals['Total Subscriptions']) / parseFloat(totals['Total Clicks']),
-    'CPC(€)': parseFloat(totals['Total Spend (€)']) / parseFloat(totals['Total Clicks']),
-    'CPM (€)': parseFloat(totals['Total Spend (€)']) / parseFloat((totals['Total Impressions'])) / 1000
+    'SAC (€/Sub)': numberFormat(totals['Total Spend (€)'] / totals['Total Subscriptions'], 2),
+    'CTR( %)': numberFormat(totals['Total Clicks'] / totals['Total Impressions'], 5),
+    'CVR(%)': numberFormat(totals['Total Subscriptions'] / totals['Total Clicks'], 5),
+    'CPC(€)': numberFormat(totals['Total Spend (€)'] / totals['Total Clicks'], 5),
+    'CPM (€)': numberFormat(totals['Total Spend (€)'] / (totals['Total Impressions']) / 1000, 5)
   };
 
   col.footer = formulas[col.name];
