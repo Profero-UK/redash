@@ -162,8 +162,8 @@ function QueryResultService($resource, $timeout, $q) {
 
     getLog() {
       if (!this.query_result.data ||
-          !this.query_result.data.log ||
-          this.query_result.data.log.length === 0) {
+        !this.query_result.data.log ||
+        this.query_result.data.log.length === 0) {
         return null;
       }
 

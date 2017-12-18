@@ -102,13 +102,14 @@ function formatExtraCols(col, $filter, clientConfig, totals) {
     'Total Impressions': numberFormat(totals['Total Impressions']),
     'Total Clicks': numberFormat(totals['Total Clicks']),
     'SAC (€/Sub)': (numberFormat(totals['Total Spend (€)'])) && (totals['Total Subscriptions']) ? numberFormat(totals['Total Spend (€)'] / totals['Total Subscriptions'], 2) : numberFormat(totals['SAC (€/Sub)']),
-    'CTR( %)': totals['Total Clicks'] && totals['Total Impressions'] ? numberFormat(totals['Total Clicks'] / totals['Total Impressions'], 5) : numberFormat(totals['CTR( %)']),
-    'CVR(%)': totals['Total Subscriptions'] && totals['Total Clicks'] ? numberFormat(totals['Total Subscriptions'] / totals['Total Clicks'], 5) : numberFormat(totals['CVR%']),
-    'CPC(€)': totals['Total Spend (€)'] && totals['Total Clicks'] ? numberFormat(totals['Total Spend (€)'] / totals['Total Clicks'], 5) : totals['CPC(€)'],
-    'CPM (€)': totals['Total Spend (€)'] && totals['Total Impressions'] ? numberFormat((totals['Total Spend (€)']) / (totals['Total Impressions']) / 1000, 5) : numberFormat(totals['CPM (€)'])
+    'CTR( %)': totals['Total Clicks'] && totals['Total Impressions'] ? numberFormat(totals['Total Clicks'] / totals['Total Impressions'], 2) : numberFormat(totals['CTR( %)']),
+    'CVR(%)': totals['Total Subscriptions'] && totals['Total Clicks'] ? numberFormat(totals['Total Subscriptions'] / totals['Total Clicks'], 2) * 100 : numberFormat(totals['CVR%']),
+    'CPC(€)': totals['Total Spend (€)'] && totals['Total Clicks'] ? numberFormat(totals['Total Spend (€)'] / totals['Total Clicks'], 2) * 100 : totals['CPC(€)'],
+    'CPM (€)': totals['Total Spend (€)'] && totals['Total Impressions'] ? numberFormat((totals['Total Spend (€)']) / (totals['Total Impressions']) * 1000, 2) : numberFormat(totals['CPM (€)'])
   };
 
-  col.footer = formulas[col.name];
+  col.footer = formulas[col.name] ? formulas[col.name] : numberFormat(totals[col.name]);
+  console.log(col.name);
 }
 
 export default function init(ngModule) {
