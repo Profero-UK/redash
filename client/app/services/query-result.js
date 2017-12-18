@@ -365,8 +365,8 @@ function QueryResultService($resource, $timeout, $q) {
       this.getColumns().forEach((col) => {
         const name = col.name;
         const type = name.split('::')[1] || name.split('__')[1];
+
         if (contains(filterTypes, type)) {
-          // filter found
           const filter = {
             name,
             friendlyName: getColumnFriendlyName(name),
@@ -383,7 +383,11 @@ function QueryResultService($resource, $timeout, $q) {
           filter.values.push(row[filter.name]);
           if (filter.values.length === 1) {
             if (filter.multiple) {
-              filter.current = [row[filter.name]];
+              let current = [row[filter.name]];
+              if (localStorage.getItem(getColumnFriendlyName(filter.friendlyName))) {
+                current = JSON.parse(localStorage.getItem(getColumnFriendlyName(filter.friendlyName)));
+              }
+              filter.current = current;
             } else {
               filter.current = row[filter.name];
             }
