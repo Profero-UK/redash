@@ -79,13 +79,8 @@ function GridRenderer(clientConfig) {
             });
           });
 
-
-
           $scope.filters = $scope.queryResult.getFilters();
           const columns = $scope.queryResult.getColumns();
-
-          console.log(totals);
-          console.log(columns);
 
           columns.forEach(col => formatExtraCols(col, $filter, clientConfig, totals));
 
