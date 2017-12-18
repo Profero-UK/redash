@@ -2,7 +2,7 @@
 
 import moment from 'moment';
 import { _, partial, isString } from 'underscore';
-import { replaceAll } from 'underscore.string';
+import { replaceAll, numberFormat } from 'underscore.string';
 import { getColumnCleanName } from '@/services/query-result';
 import template from './table.html';
 
@@ -80,6 +80,7 @@ function GridRenderer(clientConfig) {
           });
 
 
+
           $scope.filters = $scope.queryResult.getFilters();
           const columns = $scope.queryResult.getColumns();
 
@@ -101,6 +102,10 @@ function formatExtraCols(col, $filter, clientConfig, totals) {
   col.formatFunction = partial(formatValue, $filter, clientConfig, _, col.type);
 
   const formulas = {
+    'Total Spend (€)': numberFormat(totals['Total Spend (€)'], 2),
+    'Total Subscriptions': totals['Total Subscriptions'],
+    'Total Impressions': numberFormat(totals['Total Impressions']),
+    'Total Clicks': numberFormat(totals['Total Clicks']),
     'SAC (€/Sub)': (totals['Total Spend (€)']) / (parseFloat(totals['Total Subscriptions'])),
     'CTR( %)': parseFloat(totals['Total Clicks']) / parseFloat(totals['Total Impressions']),
     'CVR(%)': parseFloat(totals['Total Subscriptions']) / parseFloat(totals['Total Clicks']),
@@ -108,13 +113,7 @@ function formatExtraCols(col, $filter, clientConfig, totals) {
     'CPM (€)': parseFloat(totals['Total Spend (€)']) / parseFloat((totals['Total Impressions'])) / 1000
   };
 
-  if (!formulas[col.name]) {
-    col.footer = totals[col.name] ? totals[col.name] : '';
-    return;
-  }
-
   col.footer = formulas[col.name];
-
 }
 
 export default function init(ngModule) {
