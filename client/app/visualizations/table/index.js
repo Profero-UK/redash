@@ -82,20 +82,24 @@ function GridRenderer(clientConfig) {
           $scope.filters = $scope.queryResult.getFilters();
           const columns = $scope.queryResult.getColumns();
 
-          columns.forEach(col => formatExtraCols(col, $filter, clientConfig, totals));
 
           $scope.gridRows = $scope.queryResult.getData();
+          let rows = $scope.gridRows;
+          columns.forEach(col => formatExtraCols(col, $filter, clientConfig, totals, rows));
           $scope.gridColumns = columns;
+
+
+
         }
       });
     },
   };
 }
 
-function formatExtraCols(col, $filter, clientConfig, totals) {
+
+function formatExtraCols(col, $filter, clientConfig, totals, rows) {
   col.title = getColumnCleanName(col.name);
   col.formatFunction = partial(formatValue, $filter, clientConfig, _, col.type);
-
   const formulas = {
     'Total Spend (€)': numberFormat(totals['Total Spend (€)'], 2),
     'Total Subscriptions': totals['Total Subscriptions'],
@@ -105,12 +109,14 @@ function formatExtraCols(col, $filter, clientConfig, totals) {
     'CTR( %)': totals['Total Clicks'] && totals['Total Impressions'] ? numberFormat(totals['Total Clicks'] / totals['Total Impressions'], 2) : numberFormat(totals['CTR( %)']),
     'CVR(%)': totals['Total Subscriptions'] && totals['Total Clicks'] ? numberFormat(totals['Total Subscriptions'] / totals['Total Clicks'], 2) * 100 : numberFormat(totals['CVR%']),
     'CPC(€)': totals['Total Spend (€)'] && totals['Total Clicks'] ? numberFormat(totals['Total Spend (€)'] / totals['Total Clicks'], 2) * 100 : totals['CPC(€)'],
-    'CPM (€)': totals['Total Spend (€)'] && totals['Total Impressions'] ? numberFormat((totals['Total Spend (€)']) / (totals['Total Impressions']) * 1000, 2) : numberFormat(totals['CPM (€)'])
+    'CPM (€)': totals['Total Spend (€)'] && totals['Total Impressions'] ? numberFormat((totals['Total Spend (€)']) / (totals['Total Impressions']) * 1000, 2) : numberFormat(totals['CPM (€)']),
+    'Avg Position': numberFormat(totals['Avg Position'] / numberFormat(rows.length), 2)
   };
-
   col.footer = formulas[col.name] ? formulas[col.name] : numberFormat(totals[col.name]);
-  console.log(col.name);
+
 }
+
+
 
 export default function init(ngModule) {
   ngModule.config((VisualizationProvider) => {
