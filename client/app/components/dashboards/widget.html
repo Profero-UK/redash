@@ -47,6 +47,7 @@
             <visualization-name visualization="$ctrl.widget.visualization" />
           </p>
           <div class="text-muted query--description" ng-bind-html="$ctrl.query.description | markdown"></div>
+          <parameters parameters="$ctrl.localParametersDefs()"></parameters>
         </div>
 
         <div ng-switch-when="failed" class="body-row-auto scrollbox">
