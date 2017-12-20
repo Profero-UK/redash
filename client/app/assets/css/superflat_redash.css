@@ -8080,7 +8080,7 @@ h6 .label {
     Actions
 -----------------------------------------------------------*/
 .actions {
-  position: absolute;
+  position: relative;
   list-style: none;
   padding: 0;
   margin: 0;
