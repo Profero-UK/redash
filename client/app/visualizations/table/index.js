@@ -105,14 +105,18 @@ function formatExtraCols(col, $filter, clientConfig, totals, rows) {
     'Total Subscriptions': totals['Total Subscriptions'],
     'Total Impressions': numberFormat(totals['Total Impressions']),
     'Total Clicks': numberFormat(totals['Total Clicks']),
-    'SAC (€/Sub)': (numberFormat(totals['Total Spend (€)'])) && (totals['Total Subscriptions']) ? numberFormat(totals['Total Spend (€)'] / totals['Total Subscriptions'], 2) : numberFormat(totals['SAC (€/Sub)']),
-    'CTR( %)': totals['Total Clicks'] && totals['Total Impressions'] ? numberFormat(totals['Total Clicks'] / totals['Total Impressions'] * 100, 2) : numberFormat(totals['CTR( %)']),
-    'CVR(%)': totals['Total Subscriptions'] && totals['Total Clicks'] ? numberFormat(totals['Total Subscriptions'] / totals['Total Clicks'] * 100, 2) : numberFormat(totals['CVR%']),
-    'CPC(€)': totals['Total Spend (€)'] && totals['Total Clicks'] ? numberFormat(totals['Total Spend (€)'] / totals['Total Clicks'] * 100, 2) : totals['CPC(€)'],
-    'CPM (€)': totals['Total Spend (€)'] && totals['Total Impressions'] ? numberFormat((totals['Total Spend (€)']) / (totals['Total Impressions']) * 1000, 2) : numberFormat(totals['CPM (€)']),
+    'SAC (€/Sub)': (numberFormat(totals['Total Spend (€)'])) && (totals['Total Subscriptions']) ? numberFormat(totals['Total Spend (€)'] / totals['Total Subscriptions'], 2) : numberFormat(totals['SAC (€/Sub)'] * 100, 2),
+    'CTR( %)': totals['Total Clicks'] && totals['Total Impressions'] ? numberFormat(totals['Total Clicks'] / totals['Total Impressions'] * 100, 2) : numberFormat(totals['CTR( %)'] * 100, 2),
+    'CVR(%)': totals['Total Subscriptions'] && totals['Total Clicks'] ? numberFormat(totals['Total Subscriptions'] / totals['Total Clicks'] * 100, 2) : numberFormat(totals['CVR%'] * 100, 2),
+    'CPC(€)': totals['Total Spend (€)'] && totals['Total Clicks'] ? numberFormat(totals['Total Spend (€)'] / totals['Total Clicks'] * 100, 2) : numberFormat(totals['CPC(€)'] * 100, 2),
+    'CPM (€)': totals['Total Spend (€)'] && totals['Total Impressions'] ? numberFormat((totals['Total Spend (€)']) / (totals['Total Impressions']) * 1000, 2) : numberFormat(totals['CPM (€)'], 2),
     'Avg Position': numberFormat(totals['Avg Position'] / numberFormat(rows.length), 2)
   };
-  col.footer = formulas[col.name] ? formulas[col.name] : numberFormat(totals[col.name]);
+
+  if (col.name != 'Date') {
+    col.footer = formulas[col.name] ? formulas[col.name] : numberFormat(totals[col.name]);
+  }
+
 
 }
 
